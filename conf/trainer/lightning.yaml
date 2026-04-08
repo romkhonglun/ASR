@@ -1,0 +1,57 @@
+# @package _global_
+
+# Lightning Trainer configuration
+trainer:
+  # Hardware
+  accelerator: "gpu"
+  devices: 1
+  strategy: "auto"  # auto, ddp, fsdp
+  precision: "16-mixed"  # 16-mixed, 32, bf16-mixed
+
+  # Training
+  max_epochs: 50
+  min_epochs: 1
+  max_steps: -1  # -1 = unlimited
+  gradient_clip_val: 1.0
+  gradient_clip_algorithm: "norm"
+  accumulate_grad_batches: 4
+
+  # Validation
+  val_check_interval: 0.5  # Check twice per epoch
+  check_val_every_n_epoch: 1
+  limit_val_batches: 1.0
+
+  # Logging
+  log_every_n_steps: 50
+
+  # Callbacks
+  early_stopping:
+    enabled: true
+    monitor: "val_wer"
+    patience: 10
+    mode: "min"
+    verbose: true
+
+  model_checkpoint:
+    enabled: true
+    monitor: "val_wer"
+    mode: "min"
+    save_top_k: 3
+    save_last: true
+    every_n_epochs: 1
+    filename: "{epoch}-{val_wer:.4f}"
+
+  # Learning rate scheduler
+  scheduler:
+    name: "cosine_warmup"
+    warmup_steps: 5000
+    warmup_ratio: 0.1
+    min_lr: 1e-7
+
+# Optimizer
+optimizer:
+  name: "adamw"
+  lr: 1e-4
+  weight_decay: 0.01
+  betas: [0.9, 0.98]
+  eps: 1e-8

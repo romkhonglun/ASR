@@ -1,0 +1,24 @@
+# Pre-commit hooks configuration
+# Run: pre-commit run --all-files
+# Install: pre-commit install
+
+repos:
+  # Meta hooks
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+
+  # Ruff - linting & formatting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # Pyrefly - type checking
+  - repo: https://github.com/pyrefly/pyrefly
+    rev: v0.14.0
+    hooks:
+      - id: pyrefly

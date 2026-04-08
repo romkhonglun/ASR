@@ -1,0 +1,41 @@
+# @package _global_
+
+# TDT-VI Model configuration
+# Architecture: Parakeet Encoder (freeze) + TDT Decoder (trainable)
+defaults:
+  - _self_
+  - parakeet-encoder
+  - ../decoder/tdt
+
+model:
+  name: "tdt-vi"
+  version: "0.1.0"
+
+  # Tokenizer (from Parakeet)
+  tokenizer:
+    type: "sentencepiece"
+    model_path: null  # Auto-extracted from Parakeet model
+    vocab_size: 1024
+
+  # Training strategy
+  training_strategy:
+    # Stage 1: CTC warmup (optional)
+    ctc_warmup:
+      enabled: false
+      epochs: 5
+      loss_weight: 1.0
+
+    # Stage 2: Full TDT training
+    tdt:
+      enabled: true
+      loss_weight: 1.0
+
+  # Inference
+  inference:
+    beam_size: 1  # TDT doesn't need beam search
+    max_symbols_per_step: 2
+    temperature: 1.0
+
+  # Paths
+  checkpoint_path: null  # Resume from checkpoint
+  pretrained_path: null  # Load pretrained TDT-VI weights

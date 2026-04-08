@@ -1,0 +1,19 @@
+# @package _global_
+
+# Dataset configuration
+dataset_name: doof-ferb/vlsp2020_vinai_100h
+dataset_config: null
+
+# Splits
+train_split: train
+eval_split: test
+max_train_samples: null
+max_eval_samples: null
+
+# Audio preprocessing
+sampling_rate: 16000
+audio_column_name: audio
+text_column_name: sentence
+
+# Streaming (for large datasets)
+streaming: false

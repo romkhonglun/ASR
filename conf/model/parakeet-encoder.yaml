@@ -1,0 +1,21 @@
+# @package _global_
+
+# Parakeet CTC Encoder configuration
+# Base model: nvidia/parakeet-ctc-0.6b-vi (FastConformer-CTC, ~600M params)
+encoder:
+  pretrained_model_name: "nvidia/parakeet-ctc-0.6b-Vietnamese"
+  nemo_path: null  # Path to .nemo file if downloading manually
+  freeze: true
+  freeze_exclude: []  # Layers/modules to NOT freeze (empty = freeze all)
+
+  # Output projection (align encoder dim to TDT dim if different)
+  projection:
+    enabled: false
+    out_dim: null  # Will match decoder dim automatically
+
+  # Feature extraction
+  sample_rate: 16000
+  n_feats: 80  # Mel spectrogram features
+
+  # Downsampling: 8x depthwise-separable conv
+  # Output frame rate: ~3.125ms per frame (vs 10ms input)

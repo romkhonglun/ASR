@@ -1,0 +1,43 @@
+# @package _global_
+
+# TDT Decoder configuration
+# Token-and-Duration Transducer decoder
+decoder:
+  type: "tdt"
+
+  # Predictor (autoregressive decoder)
+  predictor:
+    vocab_size: 1024  # Match Parakeet tokenizer
+    embedding_dim: 512
+    hidden_dim: 512
+    num_layers: 2
+    dropout: 0.1
+    rnn_type: "lstm"  # lstm, gru
+    blank_idx: 0  # Blank token index
+    pad_idx: 0
+
+  # Duration prediction
+  duration:
+    max_duration: 5  # Maximum frames to skip (D = {0,1,2,3,4,5})
+    embedding_dim: 16
+
+  # Joint network
+  joint:
+    hidden_dim: 512
+    activation: "relu"
+    dropout: 0.1
+    # Two-headed output
+    token_head:
+      hidden_dim: 512
+    duration_head:
+      hidden_dim: 64
+
+  # Loss configuration
+  loss:
+    name: "tdt"  # tdt, ctc (for warmup)
+    clamp: -10.0  # Clamp log probabilities
+    sigma: 0.0  # Sigma trick penalty
+    omega: 0.0  # Omega trick (CTC regularization)
+
+  # Vocabulary
+  tokens: null  # Path to tokens.txt, null = auto from tokenizer

@@ -1,0 +1,23 @@
+# @package _global_
+
+# Weights & Biases configuration
+wandb:
+  enabled: true
+  project: asr-vietnamese
+  entity: null  # Set your W&B username or team name
+  log_model: false
+  save_code: true
+
+  # Run configuration
+  run_name: null  # Auto-generated if null
+  group: null
+  tags: []
+  notes: null
+
+  # Logging
+  log_interval: 50  # Steps between logging
+  log_gradients: false
+  log_parameters: true
+
+  # Offline mode
+  offline: false
