@@ -90,6 +90,12 @@ class TDTDataModule(pl.LightningDataModule):
                 num_proc=self.num_workers,
                 desc="Preprocessing train audio"
             )
+            # Tokenize
+            self.train_dataset = self.train_dataset.map(
+                self._tokenize_text,
+                num_proc=self.num_workers,
+                desc="Tokenizing train text"
+            )
 
         # Load validation dataset
         if stage in (None, "fit", "validate"):
@@ -106,6 +112,11 @@ class TDTDataModule(pl.LightningDataModule):
                 num_proc=self.num_workers,
                 desc="Preprocessing eval audio"
             )
+            self.val_dataset = self.val_dataset.map(
+                self._tokenize_text,
+                num_proc=self.num_workers,
+                desc="Tokenizing eval text"
+            )
 
         # Load test dataset
         if stage in (None, "test"):
@@ -118,6 +129,11 @@ class TDTDataModule(pl.LightningDataModule):
                 self._preprocess_audio,
                 num_proc=self.num_workers,
                 desc="Preprocessing test audio"
+            )
+            self.test_dataset = self.test_dataset.map(
+                self._tokenize_text,
+                num_proc=self.num_workers,
+                desc="Tokenizing test text"
             )
 
     def _preprocess_audio(self, batch: dict) -> dict:
@@ -161,18 +177,25 @@ class TDTDataModule(pl.LightningDataModule):
 
     def _tokenize_text(self, batch: dict) -> dict:
         """Tokenize text column to token IDs."""
-        text = batch.get(self.text_column, "")
+        texts = batch.get(self.text_column, [])
 
-        if self.tokenizer is not None:
-            # Use model tokenizer
-            tokens = self.tokenizer.encode(text)
-        else:
-            # Fallback: simple character-level tokenization
-            # This should be replaced with proper tokenizer
-            tokens = [ord(c) % self.vocab_size for c in text]
+        # Handle both single sample and batch
+        if isinstance(texts, str):
+            texts = [texts]
 
-        batch["token_ids"] = tokens
-        batch["token_length"] = len(tokens)
+        batch["token_ids"] = []
+        batch["token_length"] = []
+
+        for text in texts:
+            if self.tokenizer is not None:
+                # Use model tokenizer
+                tokens = self.tokenizer.encode(text)
+            else:
+                # Fallback: character-level tokenization
+                tokens = [ord(c) % max(self.vocab_size, 1) for c in text]
+
+            batch["token_ids"].append(tokens)
+            batch["token_length"].append(len(tokens))
 
         return batch
 

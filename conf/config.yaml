@@ -4,8 +4,6 @@
 defaults:
   - _self_
   - model: tdt-vi
-  - model/parakeet-encoder
-  - decoder: tdt
   - dataset: vlsp2020
   - trainer: lightning
   - logging: wandb
@@ -15,3 +13,4 @@ defaults:
 # Example: python -m asr.training.train model.tokenizer.vocab_size=2048
 # Example: python -m asr.training.train trainer.max_epochs=100
 # Example: python -m asr.training.train decoder.predictor.hidden_dim=768
+# Example: python -m asr.training.train encoder.freeze=true

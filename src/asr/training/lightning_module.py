@@ -10,7 +10,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import lightning as pl
 from typing import Optional
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 import wandb
 
 from ..models import TDTVIModel
@@ -34,8 +34,13 @@ class TDTVILightningModule(pl.LightningModule):
         self.save_hyperparameters(config)
         self.config = config
 
-        # Initialize model
-        self.model = TDTVIModel(config)
+        # Build model_config by merging model + encoder + decoder
+        model_config = OmegaConf.merge(
+            config.get("model", {}),
+            {"encoder": config.get("encoder", {})},
+            {"decoder": config.get("decoder", {})},
+        )
+        self.model = TDTVIModel(model_config)
 
         # Loss weights
         training_strategy = config.model.get("training_strategy", {})

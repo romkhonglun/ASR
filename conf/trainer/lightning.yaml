@@ -27,14 +27,14 @@ trainer:
   # Callbacks
   early_stopping:
     enabled: true
-    monitor: "val_wer"
+    monitor: "val/wer"
     patience: 10
     mode: "min"
     verbose: true
 
   model_checkpoint:
     enabled: true
-    monitor: "val_wer"
+    monitor: "val/wer"
     mode: "min"
     save_top_k: 3
     save_last: true
@@ -47,6 +47,11 @@ trainer:
     warmup_steps: 5000
     warmup_ratio: 0.1
     min_lr: 1e-7
+
+# DataModule
+batch_size: 16
+num_workers: 4
+prefetch_factor: 2
 
 # Optimizer
 optimizer:

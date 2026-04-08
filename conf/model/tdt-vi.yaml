@@ -11,6 +11,9 @@ model:
   name: "tdt-vi"
   version: "0.1.0"
 
+  # Output paths
+  output_dir: "outputs/training"
+
   # Tokenizer (from Parakeet)
   tokenizer:
     type: "sentencepiece"
